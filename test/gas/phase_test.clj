@@ -1,5 +1,5 @@
 (ns gas.phase-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is]]
             [gas.phase :as phase]))
 
 (deftest actuation-never-auto-at-any-phase
@@ -10,9 +10,9 @@
 
 (deftest phase-0-read-only
   "Phase 0 is read-only: no auto-commits."
-  (is-not (phase/can-auto-commit? 0 :customer/intake)
+  (is (not (phase/can-auto-commit? 0 :customer/intake))
     "Intake should not auto at phase 0")
-  (is-not (phase/can-auto-commit? 0 :meter/verify)
+  (is (not (phase/can-auto-commit? 0 :meter/verify))
     "Verify should not auto at phase 0"))
 
 (deftest phase-1-intake
@@ -31,13 +31,13 @@
 
 (deftest phase-3-supervised
   "Phase 3: all actuation requires human sign-off, no auto-commits."
-  (is-not (phase/can-auto-commit? 3 :customer/intake)
+  (is (not (phase/can-auto-commit? 3 :customer/intake))
     "No intake auto at phase 3")
-  (is-not (phase/can-auto-commit? 3 :meter/verify)
+  (is (not (phase/can-auto-commit? 3 :meter/verify))
     "No verify auto at phase 3")
-  (is-not (phase/can-auto-commit? 3 :actuation/provision-supply)
+  (is (not (phase/can-auto-commit? 3 :actuation/provision-supply))
     "Provision never auto")
-  (is-not (phase/can-auto-commit? 3 :actuation/suspend-supply)
+  (is (not (phase/can-auto-commit? 3 :actuation/suspend-supply))
     "Suspension never auto")
   (is (phase/can-human-approve? 3 :actuation/provision-supply)
     "Provision can be human-approved at phase 3")

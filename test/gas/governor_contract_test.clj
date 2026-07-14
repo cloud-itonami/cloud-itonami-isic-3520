@@ -1,5 +1,5 @@
 (ns gas.governor-contract-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is]]
             [gas.store :as store]
             [gas.advisor :as advisor]
             [gas.governor :as governor]
@@ -70,6 +70,6 @@
                    0.9
                    "Suspension for payment")]
     (let [eval (governor/evaluate proposal st)]
-      (is-not (:holds? eval) "Non-protected suspension should not hard-hold")
-      (is-not (some #(= (:rule %) :protected-recipient) (:hard-violations eval))
+      (is (not (:holds? eval)) "Non-protected suspension should not hard-hold")
+      (is (not (some #(= (:rule %) :protected-recipient) (:hard-violations eval)))
         "Should not have protected-recipient violation"))))

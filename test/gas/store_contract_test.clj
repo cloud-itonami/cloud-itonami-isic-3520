@@ -1,5 +1,5 @@
 (ns gas.store-contract-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is]]
             [gas.store :as store]))
 
 (deftest mem-store-retrieval
@@ -7,7 +7,7 @@
   (let [st (store/mem-store)]
     (is (store/customer st "cust-1")
       "Should retrieve a known customer")
-    (is-not (store/customer st "unknown")
+    (is (not (store/customer st "unknown"))
       "Should return nil for unknown customer")
     (is (pos? (count (store/all-customers st)))
       "Should have demo customers")))
@@ -27,7 +27,7 @@
 (deftest provision-guard
   "Store should track provision status."
   (let [st (store/mem-store)]
-    (is-not (store/customer-already-provisioned? st "cust-1")
+    (is (not (store/customer-already-provisioned? st "cust-1"))
       "Initially, customer should not be provisioned")
     ;; Mark as provisioned
     (swap! (-> st :data) assoc-in [:customers "cust-1" :supply-provisioned?] true)
@@ -37,7 +37,7 @@
 (deftest suspension-guard
   "Store should track suspension status."
   (let [st (store/mem-store)]
-    (is-not (store/customer-already-suspended? st "cust-1")
+    (is (not (store/customer-already-suspended? st "cust-1"))
       "Initially, customer should not be suspended")
     ;; Mark as suspended
     (swap! (-> st :data) assoc-in [:customers "cust-1" :supply-suspended?] true)

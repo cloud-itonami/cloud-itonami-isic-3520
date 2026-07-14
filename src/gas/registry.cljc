@@ -15,6 +15,7 @@
   {:subject customer-id
    :op :actuation/provision-supply
    :value {:cites cites
+           :spec-basis (first cites)
            :checklist checklist
            :confidence confidence
            :notes notes}
@@ -33,6 +34,7 @@
   {:subject customer-id
    :op :actuation/suspend-supply
    :value {:cites cites
+           :spec-basis (first cites)
            :reason reason
            :checklist checklist
            :confidence confidence

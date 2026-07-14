@@ -75,6 +75,23 @@
               :protected-recipient? true
               :supply-provisioned? false :supply-suspended? false
               :jurisdiction "JPN" :status :intake}}
+   :verifications
+   {"cust-1" {:customer-id "cust-1"
+              :checklist {:customer-id-proof true :meter-cert true
+                         :address-proof true :contact-info true
+                         :safety-brochure-provided true}}
+    "cust-2" {:customer-id "cust-2"
+              :checklist {:customer-id-proof true :meter-cert true
+                         :address-proof true :contact-info true
+                         :safety-brochure-provided true}}
+    "cust-3" {:customer-id "cust-3"
+              :checklist {:customer-id-proof true :meter-cert true
+                         :address-proof true :contact-info true
+                         :delinquency-verified true}}
+    "cust-4" {:customer-id "cust-4"
+              :checklist {:customer-id-proof true :meter-cert true
+                         :address-proof true :contact-info true
+                         :safety-brochure-provided true}}}
    :ledger []
    :provision-history []
    :suspension-history []

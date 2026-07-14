@@ -1,5 +1,5 @@
 (ns gas.facts-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [deftest is]]
             [gas.facts :as facts]))
 
 (deftest japan-jurisdiction-requirements
@@ -28,8 +28,8 @@
          :safety-brochure-provided true})
     "Complete checklist should satisfy all requirements")
 
-  (is-not (facts/required-evidence-satisfied? :JPN
-            {:customer-id-proof true})
+  (is (not (facts/required-evidence-satisfied? :JPN
+            {:customer-id-proof true}))
     "Incomplete checklist should not satisfy all requirements"))
 
 (deftest coverage-reporting

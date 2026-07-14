@@ -31,9 +31,10 @@
 (defn- spec-basis-violations
   "A provisioning/suspension proposal with no spec-basis citation is a
   HARD violation -- never invent a jurisdiction's requirements."
-  [{:keys [op]} proposal]
-  (when (contains? #{:actuation/provision-supply :actuation/suspend-supply} op)
-    (let [value (:value proposal)]
+  [proposal _st]
+  (let [op (:op proposal)
+        value (:value proposal)]
+    (when (contains? #{:actuation/provision-supply :actuation/suspend-supply} op)
       (when (or (empty? (:cites proposal))
                 (and (contains? value :spec-basis) (nil? (:spec-basis value))))
         [{:rule :no-spec-basis

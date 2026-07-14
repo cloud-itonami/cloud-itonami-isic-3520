@@ -24,7 +24,7 @@
      :meter-inspection {:description "Meter certification and safety inspection"
                        :required true
                        :spec-basis "Gas Utility Regulation Act §28"
-                       :evidence [:meter-cert :inspection-date]}
+                       :evidence [:meter-cert]}
      :safety-information {:description "Provide safety information to customer"
                          :required true
                          :spec-basis "Gas Utility Regulation Act §33"
@@ -44,7 +44,7 @@
      :meter-inspection {:description "Meter accuracy certification"
                        :required true
                        :spec-basis "NIST Handbook 44 - Specifications for Meters"
-                       :evidence [:meter-cert :calibration-date]}
+                       :evidence [:meter-cert]}
      :disclosure {:description "Provide notice of terms and conditions"
                  :required true
                  :spec-basis "FTC Act §5"
@@ -69,7 +69,7 @@
   in this catalog. Honest about out-of-scope coverage."
   []
   (let [catalog-count (count catalog)
-        world-jurisdictions ~194]
+        world-jurisdictions 194]
     {:implemented catalog-count
      :worldwide-jurisdictions world-jurisdictions
      :coverage-pct (* 100.0 (/ catalog-count world-jurisdictions))

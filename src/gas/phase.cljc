@@ -9,7 +9,8 @@
   :actuation/suspend-supply is in ANY phase's :auto set. Actuation is
   ALWAYS human-approved, enforced by both this phase table AND the
   governor's confidence-gate check -- two independent layers agree that
-  supply operations are never autonomous.")
+  supply operations are never autonomous."
+  (:require [clojure.set :as set]))
 
 (def phases
   "Phase lifecycle table. Each phase defines which operations can auto-commit.
