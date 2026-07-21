@@ -60,7 +60,26 @@
      :meter-inspection {:description "Smart meter installation where required"
                        :required false
                        :spec-basis "The Gas (Standards of Performance) Regulations"
-                       :evidence [:meter-cert]}}}})
+                       :evidence [:meter-cert]}}}
+
+   :DEU
+   {:name "Germany"
+    :requirements
+    {:customer-verification {:description "General grid-connection/basic-supply eligibility obligation on the utility (not an identity-check requirement like JPN/USA -- German law frames this as the utility's duty to connect/supply eligible customers, not a customer-side ID check)"
+                            :required true
+                            :spec-basis "Energiewirtschaftsgesetz (EnWG) §18 (Allgemeine Anschlusspflicht) + §36 (Grundversorgungspflicht)"
+                            :evidence [:customer-id-proof :address-proof]}
+     :meter-inspection {:description "Consumption measurement standard underlying energy billing"
+                       :required true
+                       :spec-basis "Energiewirtschaftsgesetz (EnWG) §40a (Verbrauchsermittlung für Energierechnungen)"
+                       :evidence [:meter-cert]}
+     :disclosure {:description "Minimum content requirements for energy bills issued to customers"
+                 :required true
+                 :spec-basis "Energiewirtschaftsgesetz (EnWG) §40"
+                 :evidence [:disclosure-signed]}}
+    :suspension-requirements
+    {:payment-delinquency {:allowed true
+                           :spec-basis "Energiewirtschaftsgesetz (EnWG) §41g (Ergänzende Regelungen zu Versorgungsunterbrechungen wegen Nichtzahlung bei Haushaltskunden in der Grundversorgung mit Strom oder Gas)"}}}})
 
 ;; ----------------------------- coverage reporting (honest) -----------------------------
 
