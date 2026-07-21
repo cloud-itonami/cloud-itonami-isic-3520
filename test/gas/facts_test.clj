@@ -18,6 +18,19 @@
   (is (facts/suspension-allowed-for? :JPN :payment-delinquency)
     "Payment delinquency suspension should be allowed in Japan"))
 
+(deftest germany-jurisdiction-requirements
+  "Germany (DEU) has official gas-safety requirements cited (Energiewirtschaftsgesetz)."
+  (let [cites (facts/requirement-citations :DEU)]
+    (is cites "Germany should have requirements")
+    (is (contains? cites :customer-verification)
+      "Should have customer-verification requirement")
+    (is (contains? cites :meter-inspection)
+      "Should have meter-inspection requirement")
+    (is (every? :spec-basis (vals cites))
+      "Every requirement should have an official spec-basis citation")
+    (is (facts/suspension-allowed-for? :DEU :payment-delinquency)
+      "Payment delinquency suspension should be allowed in Germany (EnWG §41g)")))
+
 (deftest required-evidence-satisfied
   "Check if a checklist satisfies jurisdiction requirements."
   (is (facts/required-evidence-satisfied? :JPN
