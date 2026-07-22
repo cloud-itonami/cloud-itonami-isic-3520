@@ -79,7 +79,23 @@
                  :evidence [:disclosure-signed]}}
     :suspension-requirements
     {:payment-delinquency {:allowed true
-                           :spec-basis "Energiewirtschaftsgesetz (EnWG) §41g (Ergänzende Regelungen zu Versorgungsunterbrechungen wegen Nichtzahlung bei Haushaltskunden in der Grundversorgung mit Strom oder Gas)"}}}})
+                           :spec-basis "Energiewirtschaftsgesetz (EnWG) §41g (Ergänzende Regelungen zu Versorgungsunterbrechungen wegen Nichtzahlung bei Haushaltskunden in der Grundversorgung mit Strom oder Gas)"}}}
+
+   :FRA
+   {:name "France"
+    :requirements
+    {:winter-disconnection-prohibition
+     {:description "Suppliers of electricity, heat, and gas may not interrupt service to a primary residence (residence principale), including via contract termination, for non-payment during the winter period (1 November to 31 March of the following year)"
+      :required true
+      :spec-basis "Code de l'action sociale et des familles Art. L115-3"
+      :evidence [:winter-period-check :primary-residence-proof]}}
+    :suspension-requirements
+    {:payment-delinquency {:allowed true
+                           :spec-basis "Code de l'action sociale et des familles Art. L115-3 (suspension for non-payment allowed only outside the winter period; blanket-prohibited 1 Nov-31 Mar for a primary residence)"
+                           :seasonal-prohibition {:period "1 November - 31 March"
+                                                  :applies-to [:electricity :heat :gas]
+                                                  :condition "residence principale (primary residence)"
+                                                  :spec-basis "Code de l'action sociale et des familles Art. L115-3"}}}}})
 
 ;; ----------------------------- coverage reporting (honest) -----------------------------
 
@@ -105,6 +121,13 @@
   "Check if suspension is allowed for a given reason in this jurisdiction."
   [jurisdiction reason]
   (get-in catalog [jurisdiction :suspension-requirements reason :allowed] false))
+
+(defn seasonal-suspension-prohibited?
+  "Check if this jurisdiction blanket-prohibits suspension for a reason during
+  a seasonal window (e.g. France's winter disconnection moratorium), regardless
+  of whether the reason is otherwise :allowed outside that window."
+  [jurisdiction reason]
+  (boolean (get-in catalog [jurisdiction :suspension-requirements reason :seasonal-prohibition])))
 
 (defn required-evidence-satisfied?
   "Check if a checklist satisfies this jurisdiction's evidence requirements."

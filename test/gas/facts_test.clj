@@ -45,6 +45,23 @@
             {:customer-id-proof true}))
     "Incomplete checklist should not satisfy all requirements"))
 
+(deftest france-jurisdiction-requirements
+  "France (FRA) has a winter disconnection-moratorium citation (Code de l'action
+  sociale et des familles Art. L115-3), distinct in shape from JPN/USA/GBR/DEU's
+  customer-verification/meter-inspection/disclosure requirements."
+  (let [cites (facts/requirement-citations :FRA)]
+    (is cites "France should have requirements")
+    (is (contains? cites :winter-disconnection-prohibition)
+      "Should have winter-disconnection-prohibition requirement")
+    (is (every? :spec-basis (vals cites))
+      "Every requirement should have an official spec-basis citation")
+    (is (facts/suspension-allowed-for? :FRA :payment-delinquency)
+      "Payment-delinquency suspension is allowed in France outside the winter period")
+    (is (facts/seasonal-suspension-prohibited? :FRA :payment-delinquency)
+      "France blanket-prohibits payment-delinquency suspension during the winter period (1 Nov-31 Mar)")
+    (is (not (facts/seasonal-suspension-prohibited? :JPN :payment-delinquency))
+      "Japan has no seasonal-prohibition entry for payment-delinquency suspension")))
+
 (deftest coverage-reporting
   "Coverage should honestly report starting catalog scope."
   (let [coverage (facts/coverage)]
