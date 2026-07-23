@@ -78,8 +78,12 @@
         :detail "このメーターの供給は既に停止されている"}])))
 
 (defn- confidence-gate-violations
-  "Low confidence or high-stakes actuation -> escalate to human."
-  [{:keys [op]} {:keys [value]}]
+  "Low confidence or high-stakes actuation -> escalate to human.
+  `value` is already `(:value proposal)` -- do not re-destructure a
+  nested `:value` key out of it (that was a latent bug: the double
+  destructure always read confidence as the 0.5 default, masked only
+  because both actuation ops are unconditionally high-stakes anyway)."
+  [{:keys [op]} value]
   (let [confidence (:confidence value 0.5)]
     (when (or (< confidence confidence-floor)
               (contains? high-stakes op))
