@@ -1,5 +1,5 @@
 (ns gas.facts-test
-  (:require [clojure.test :refer [deftest is]]
+  (:require [clojure.test :refer [deftest is testing]]
             [gas.facts :as facts]))
 
 (deftest japan-jurisdiction-requirements
@@ -77,3 +77,58 @@
     (doseq [[req-key req-spec] (:requirements jdata)]
       (is (contains? req-spec :spec-basis)
         (str jurisdiction " " req-key " should have spec-basis")))))
+
+;; ───────── Evidence gate must fail closed (2026-07-25) ─────────
+
+(deftest unknown-jurisdiction-fails-the-evidence-gate-closed
+  ;; get-in returns nil for a jurisdiction absent from `catalog`, and
+  ;; `(every? f nil)` is true, so this predicate used to pass VACUOUSLY --
+  ;; a subject with an unrecognised jurisdiction cleared the Governor's
+  ;; :evidence-incomplete gate carrying an empty checklist.
+  (is (false? (facts/required-evidence-satisfied? :atlantis #{}))
+      "an unknown jurisdiction must never satisfy the evidence requirements")
+  (is (false? (facts/required-evidence-satisfied? :atlantis #{:anything}))
+      "and must not be rescued by supplying unrelated evidence")
+  (is (false? (facts/required-evidence-satisfied? nil #{}))
+      "a missing jurisdiction is not a pass either"))
+
+(deftest known-jurisdictions-still-evaluate-normally
+  ;; Guards against "fixed" by making everything false.
+  (let [jurisdictions (keys facts/catalog)]
+    (is (seq jurisdictions) "catalog must be non-empty for this test to mean anything")
+    (doseq [j jurisdictions]
+      (is (boolean? (facts/required-evidence-satisfied? j #{}))
+          (str j " must still produce a boolean verdict"))
+      (is (true? (facts/required-evidence-satisfied?
+                  j
+                  (set (mapcat (comp :evidence val)
+                               (get-in facts/catalog [j :requirements])))))
+          (str j " must be satisfiable when every listed evidence key is present")))))
+
+(deftest string-jurisdictions-resolve-to-the-catalog
+  ;; Subject records carry :jurisdiction as a STRING while catalog is keyed by
+  ;; keyword. Until 2026-07-25 nothing bridged the two, so the Governor's only
+  ;; catalog lookup missed for EVERY real subject and the evidence gate was
+  ;; dead code.
+  (is (= :JPN (facts/normalize-jurisdiction "JPN")))
+  (is (= :JPN (facts/normalize-jurisdiction :JPN)))
+  (is (nil? (facts/normalize-jurisdiction 42)) "unusable values fail closed")
+  (is (nil? (facts/normalize-jurisdiction nil)))
+
+  (testing "the string form now sees the same requirements as the keyword form"
+    (is (= (facts/requirement-citations :JPN)
+           (facts/requirement-citations "JPN")))
+    (is (seq (facts/requirement-citations "JPN"))
+        "a string jurisdiction used to resolve to nil -- that was the dead gate")))
+
+(deftest evidence-gate-actually-bites-for-string-jurisdictions
+  (let [required (set (mapcat (comp :evidence val)
+                              (facts/requirement-citations "JPN")))]
+    (is (seq required) "there must be real requirements to satisfy")
+    (is (true? (facts/required-evidence-satisfied? "JPN" required))
+        "a complete checklist passes")
+    (is (false? (facts/required-evidence-satisfied? "JPN" #{}))
+        "an EMPTY checklist must now fail -- it silently passed before")
+    (doseq [k required]
+      (is (false? (facts/required-evidence-satisfied? "JPN" (disj required k)))
+          (str "dropping " k " must fail the gate")))))
