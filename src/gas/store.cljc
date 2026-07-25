@@ -85,8 +85,13 @@
                          :address-proof true :contact-info true
                          :safety-brochure-provided true}}
     "cust-3" {:customer-id "cust-3"
+              ;; :safety-brochure-provided is required by :JPN and was
+              ;; missing here. Invisible until 2026-07-25 because the
+              ;; jurisdiction key mismatch made the evidence gate a no-op --
+              ;; this fixture was never actually validated against the catalog.
               :checklist {:customer-id-proof true :meter-cert true
                          :address-proof true :contact-info true
+                         :safety-brochure-provided true
                          :delinquency-verified true}}
     "cust-4" {:customer-id "cust-4"
               :checklist {:customer-id-proof true :meter-cert true
