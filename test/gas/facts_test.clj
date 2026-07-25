@@ -2,8 +2,7 @@
   (:require [clojure.test :refer [deftest is testing]]
             [gas.facts :as facts]))
 
-(deftest japan-jurisdiction-requirements
-  "Japan (JPN) has official gas-safety requirements cited."
+(deftest ^{:doc "Japan (JPN) has official gas-safety requirements cited."} japan-jurisdiction-requirements
   (let [cites (facts/requirement-citations :JPN)]
     (is cites "Japan should have requirements")
     (is (contains? cites :customer-verification)
@@ -13,13 +12,11 @@
     (is (every? :spec-basis (vals cites))
       "Every requirement should have an official spec-basis citation")))
 
-(deftest suspension-allowed-check
-  "Japan allows suspension for payment delinquency."
+(deftest ^{:doc "Japan allows suspension for payment delinquency."} suspension-allowed-check
   (is (facts/suspension-allowed-for? :JPN :payment-delinquency)
     "Payment delinquency suspension should be allowed in Japan"))
 
-(deftest germany-jurisdiction-requirements
-  "Germany (DEU) has official gas-safety requirements cited (Energiewirtschaftsgesetz)."
+(deftest ^{:doc "Germany (DEU) has official gas-safety requirements cited (Energiewirtschaftsgesetz)."} germany-jurisdiction-requirements
   (let [cites (facts/requirement-citations :DEU)]
     (is cites "Germany should have requirements")
     (is (contains? cites :customer-verification)
@@ -31,8 +28,7 @@
     (is (facts/suspension-allowed-for? :DEU :payment-delinquency)
       "Payment delinquency suspension should be allowed in Germany (EnWG §41g)")))
 
-(deftest required-evidence-satisfied
-  "Check if a checklist satisfies jurisdiction requirements."
+(deftest ^{:doc "Check if a checklist satisfies jurisdiction requirements."} required-evidence-satisfied
   (is (facts/required-evidence-satisfied? :JPN
         {:customer-id-proof true
          :meter-cert true
@@ -45,10 +41,9 @@
             {:customer-id-proof true}))
     "Incomplete checklist should not satisfy all requirements"))
 
-(deftest france-jurisdiction-requirements
-  "France (FRA) has a winter disconnection-moratorium citation (Code de l'action
+(deftest ^{:doc "France (FRA) has a winter disconnection-moratorium citation (Code de l'action
   sociale et des familles Art. L115-3), distinct in shape from JPN/USA/GBR/DEU's
-  customer-verification/meter-inspection/disclosure requirements."
+  customer-verification/meter-inspection/disclosure requirements."} france-jurisdiction-requirements
   (let [cites (facts/requirement-citations :FRA)]
     (is cites "France should have requirements")
     (is (contains? cites :winter-disconnection-prohibition)
@@ -62,16 +57,14 @@
     (is (not (facts/seasonal-suspension-prohibited? :JPN :payment-delinquency))
       "Japan has no seasonal-prohibition entry for payment-delinquency suspension")))
 
-(deftest coverage-reporting
-  "Coverage should honestly report starting catalog scope."
+(deftest ^{:doc "Coverage should honestly report starting catalog scope."} coverage-reporting
   (let [coverage (facts/coverage)]
     (is (< (:implemented coverage) (:worldwide-jurisdictions coverage))
       "Implemented should be less than worldwide total")
     (is (< (:coverage-pct coverage) 100)
       "Coverage percentage should be honest about partial implementation")))
 
-(deftest jurisdiction-catalog-entries-have-citations
-  "Every jurisdiction in catalog should have at least one official citation."
+(deftest ^{:doc "Every jurisdiction in catalog should have at least one official citation."} jurisdiction-catalog-entries-have-citations
   (doseq [[jurisdiction jdata] facts/catalog]
     (is (contains? jdata :requirements) (str jurisdiction " should have requirements"))
     (doseq [[req-key req-spec] (:requirements jdata)]

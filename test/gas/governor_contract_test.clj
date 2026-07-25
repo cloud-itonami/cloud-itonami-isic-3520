@@ -5,8 +5,7 @@
             [gas.governor :as governor]
             [gas.registry :as registry]))
 
-(deftest spec-basis-hard-gate
-  "Spec-basis is a HARD gate: never allow proposals without official citations."
+(deftest ^{:doc "Spec-basis is a HARD gate: never allow proposals without official citations."} spec-basis-hard-gate
   (let [st (store/mem-store)
         proposal {:op :actuation/provision-supply
                   :subject "cust-1"
@@ -19,9 +18,8 @@
       (is (seq (:hard-violations eval)) "Should have hard violations")
       (is (some #(= (:rule %) :no-spec-basis) (:hard-violations eval))))))
 
-(deftest protected-recipient-hard-gate
-  "Protected recipient meter (life-support/critical-infrastructure) can
-  NEVER be suspended, not even with human approval."
+(deftest ^{:doc "Protected recipient meter (life-support/critical-infrastructure) can
+  NEVER be suspended, not even with human approval."} protected-recipient-hard-gate
   (let [st (store/mem-store)
         ;; Hospital meter (cust-2) is marked protected-recipient? true
         proposal (registry/suspension-draft "cust-2"
@@ -35,8 +33,7 @@
       (is (some #(= (:rule %) :protected-recipient) (:hard-violations eval))
         "Should have protected-recipient violation"))))
 
-(deftest already-provisioned-guard
-  "Double provisioning guard: a supply can only be provisioned once."
+(deftest ^{:doc "Double provisioning guard: a supply can only be provisioned once."} already-provisioned-guard
   (let [st (store/mem-store)
         ;; Pre-provision cust-1
         _ (swap! (-> st :data) assoc-in [:customers "cust-1" :supply-provisioned?] true)
@@ -50,9 +47,8 @@
       (is (some #(= (:rule %) :already-provisioned) (:hard-violations eval))
         "Should have already-provisioned violation"))))
 
-(deftest actuation-requires-escalation
-  "Both provision and suspension actuation require human sign-off,
-  even when all other checks are clean."
+(deftest ^{:doc "Both provision and suspension actuation require human sign-off,
+  even when all other checks are clean."} actuation-requires-escalation
   (let [st (store/mem-store)
         adv (advisor/mock-advisor)
         provision-proposal (advisor/provision-proposal adv "cust-1")]
@@ -60,8 +56,7 @@
       (is (seq (:soft-violations eval)) "Should have soft violations for actuation")
       (is (some #(= (:rule %) :escalate) (:soft-violations eval))))))
 
-(deftest non-protected-recipient-can-be-suspended
-  "Non-protected customers CAN be suspended (human approval only, not auto)."
+(deftest ^{:doc "Non-protected customers CAN be suspended (human approval only, not auto)."} non-protected-recipient-can-be-suspended
   (let [st (store/mem-store)
         proposal (registry/suspension-draft "cust-3"  ; industrial, not protected
                    ["Gas Utility Regulation Act §32"]
