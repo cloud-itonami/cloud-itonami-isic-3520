@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/"
+             xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/"
+             xmlns:camunda="http://camunda.org/schema/1.0/dmn"
+             id="open-gas-leak-class"
+             name="Gas Leak Class"
+             namespace="https://etzhayyim.com/dmn/open-gas">
+  <decision id="openGas.leakClass" name="Gas Leak Class">
+    <decisionTable id="dt_leakClass" hitPolicy="FIRST">
+      <input id="i_indoor" label="indoorOrConfined">
+        <inputExpression typeRef="boolean"><text>indoorOrConfined</text></inputExpression>
+      </input>
+      <input id="i_evac" label="requiresEvacuation">
+        <inputExpression typeRef="boolean"><text>requiresEvacuation</text></inputExpression>
+      </input>
+      <input id="i_persons" label="hazardToPersons">
+        <inputExpression typeRef="boolean"><text>hazardToPersons</text></inputExpression>
+      </input>
+      <input id="i_property" label="hazardToProperty">
+        <inputExpression typeRef="boolean"><text>hazardToProperty</text></inputExpression>
+      </input>
+
+      <output id="o_leakClass" label="leakClass" name="leakClass" typeRef="number"/>
+      <output id="o_responseSla" label="responseSla" name="responseSla" typeRef="string"/>
+      <output id="o_requireEmergencyNotice" label="requireEmergencyNotice" name="requireEmergencyNotice" typeRef="boolean"/>
+
+      <rule id="r1">
+        <inputEntry><text>true</text></inputEntry>
+        <inputEntry><text>-</text></inputEntry>
+        <inputEntry><text>-</text></inputEntry>
+        <inputEntry><text>-</text></inputEntry>
+        <outputEntry><text>1</text></outputEntry>
+        <outputEntry><text>"immediate"</text></outputEntry>
+        <outputEntry><text>true</text></outputEntry>
+      </rule>
+      <rule id="r2">
+        <inputEntry><text>-</text></inputEntry>
+        <inputEntry><text>true</text></inputEntry>
+        <inputEntry><text>-</text></inputEntry>
+        <inputEntry><text>-</text></inputEntry>
+        <outputEntry><text>1</text></outputEntry>
+        <outputEntry><text>"immediate"</text></outputEntry>
+        <outputEntry><text>true</text></outputEntry>
+      </rule>
+      <rule id="r3">
+        <inputEntry><text>-</text></inputEntry>
+        <inputEntry><text>-</text></inputEntry>
+        <inputEntry><text>true</text></inputEntry>
+        <inputEntry><text>-</text></inputEntry>
+        <outputEntry><text>1</text></outputEntry>
+        <outputEntry><text>"immediate"</text></outputEntry>
+        <outputEntry><text>true</text></outputEntry>
+      </rule>
+      <rule id="r4">
+        <inputEntry><text>false</text></inputEntry>
+        <inputEntry><text>false</text></inputEntry>
+        <inputEntry><text>false</text></inputEntry>
+        <inputEntry><text>true</text></inputEntry>
+        <outputEntry><text>2</text></outputEntry>
+        <outputEntry><text>"P30d"</text></outputEntry>
+        <outputEntry><text>false</text></outputEntry>
+      </rule>
+      <rule id="r5">
+        <inputEntry><text>-</text></inputEntry>
+        <inputEntry><text>-</text></inputEntry>
+        <inputEntry><text>-</text></inputEntry>
+        <inputEntry><text>-</text></inputEntry>
+        <outputEntry><text>3</text></outputEntry>
+        <outputEntry><text>"P15m"</text></outputEntry>
+        <outputEntry><text>false</text></outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+</definitions>

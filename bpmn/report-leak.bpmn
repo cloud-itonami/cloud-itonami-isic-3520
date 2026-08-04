@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  id="open-gas-report-leak"
+                  targetNamespace="https://etzhayyim.com/bpmn/open-gas">
+  <bpmn:process id="reportGasLeak" name="Report Gas Leak" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_Init" name="Leak detected"/>
+    <bpmn:sequenceFlow id="f1" sourceRef="StartEvent_Init" targetRef="Task_CollectLeakForm"/>
+    <bpmn:userTask id="Task_CollectLeakForm" name="Collect leak form"
+                   camunda:formKey="openGas.reportLeak.v1"/>
+    <bpmn:sequenceFlow id="f2" sourceRef="Task_CollectLeakForm" targetRef="Task_ClassifyLeak"/>
+    <bpmn:businessRuleTask id="Task_ClassifyLeak" name="Leak class (DMN)"
+                           camunda:decisionRef="openGas.leakClass"/>
+    <bpmn:sequenceFlow id="f3" sourceRef="Task_ClassifyLeak" targetRef="Task_PersistLeak"/>
+    <bpmn:serviceTask id="Task_PersistLeak" name="com.etzhayyim.apps.openGas.reportLeak"
+                      camunda:topic="com.etzhayyim.apps.openGas.reportLeak"/>
+    <bpmn:sequenceFlow id="f4" sourceRef="Task_PersistLeak" targetRef="Gateway_Emergency"/>
+    <bpmn:exclusiveGateway id="Gateway_Emergency" name="Emergency?" default="f5b"/>
+    <bpmn:sequenceFlow id="f5a" sourceRef="Gateway_Emergency" targetRef="Task_AuditPost">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${leakClass == 1}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="f5b" sourceRef="Gateway_Emergency" targetRef="EndEvent_Logged"/>
+    <bpmn:serviceTask id="Task_AuditPost" name="Emit app.bsky.feed.post (emergency)"
+                      camunda:topic="app.bsky.feed.post"/>
+    <bpmn:sequenceFlow id="f6" sourceRef="Task_AuditPost" targetRef="EndEvent_Notified"/>
+    <bpmn:endEvent id="EndEvent_Logged" name="Leak logged"/>
+    <bpmn:endEvent id="EndEvent_Notified" name="Emergency notified"/>
+  </bpmn:process>
+</bpmn:definitions>

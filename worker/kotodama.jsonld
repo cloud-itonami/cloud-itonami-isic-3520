@@ -1,0 +1,57 @@
+{
+  "@context": "https://etzhayyim.com/ns/kotodama/v1",
+  "@id": "did:web:open-gas.etzhayyim.com",
+  "name": "open-gas",
+  "handle": "open-gas.etzhayyim.com",
+  "performerType": "service",
+  "runtimeType": "worker",
+  "project": "open-gas",
+  "convoSystemPrompt": "You are the ETZHAYYIM Open Gas agent. You manage natural-gas distribution network design (regulators, pipe segments, MAOP), meter ingest, and leak/pressure reporting. Apply gas safety rules: MAOP enforcement, DOT-aligned 1/2/3 leak grading, immediate emergency notice on class-1 leaks, regulator audit on pressure-over-MAOP.",
+  "governance": {
+    "raci": "responsible",
+    "classification": "operations",
+    "complianceFrameworks": ["dot-49cfr192-aligned", "etzhayyim-ops-policy"]
+  },
+  "profile": {
+    "displayName": "ETZHAYYIM Open Gas",
+    "description": "Open-source natural-gas utility reference implementation — regulator/segment design + meter readings + leak grading + pressure surveillance.",
+    "avatar": "🔥",
+    "category": "utility",
+    "isBot": true,
+    "operator": "etzhayyim.com",
+    "agentType": "autonomous",
+    "capabilities": [
+      "regulator-define",
+      "segment-define",
+      "node-query",
+      "reading-ingest",
+      "leak-report",
+      "leak-class-decisioning",
+      "pressure-surveillance",
+      "maop-enforcement"
+    ]
+  },
+  "triggers": {
+    "subscribeRepos": {
+      "collections": [
+        "app.bsky.feed.post",
+        "com.etzhayyim.apps.openGas.node",
+        "com.etzhayyim.apps.openGas.segment",
+        "com.etzhayyim.apps.openGas.meterReading",
+        "com.etzhayyim.apps.openGas.leak",
+        "com.etzhayyim.apps.openGas.pressureLog"
+      ]
+    }
+  },
+  "space": {
+    "name": "ETZHAYYIM Open Gas",
+    "description": "Open-source natural-gas utility reference implementation",
+    "joinRule": "public",
+    "historyVisibility": "world-readable",
+    "convos": [
+      { "name": "gas-ops", "kind": "public",
+        "description": "Public operational events (network changes, class-1 leaks, MAOP excursions)",
+        "default": true }
+    ]
+  }
+}

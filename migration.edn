@@ -1,0 +1,1 @@
+{:schema "etzhayyim.migration/v1" :source {:repository "etzhayyim/root" :revision "7a08afb44a426568ceb8137f8b15881d8a2904e2" :path "60-apps/etzhayyim-project-open-gas" :tree "edb1cfd38549b4c317f144fddf1c1dabdab078f7" :tracked-files 31 :bytes 85918} :destination {:repository "etzhayyim/com-etzhayyim-app-open-gas"} :identity {:allowed-additions ["README.edn" "migration.edn"]}}

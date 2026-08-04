@@ -1,0 +1,32 @@
+{
+  "viewId": "open-gas.AV-1",
+  "viewType": "AV-1",
+  "title": "Overview and Summary Information",
+  "did": "did:web:open-gas.etzhayyim.com",
+  "format": "json",
+  "content": {
+    "purpose": "Provide a DID-addressed natural-gas distribution operations service (regulator/segment design + meter readings + leak/pressure reporting) as an auditable, open-source reference implementation.",
+    "scope": {
+      "in": ["regulator + pipe-segment topology with MAOP", "meter ingest", "leak class decisioning (DMN, grade 1/2/3)", "pressure log ingest"],
+      "out": ["SCADA/RTU realtime", "cathodic protection telemetry", "tariff & NRG analytics"]
+    },
+    "architectureDescriptionContext": {
+      "mission": "Provide tamper-evident, DID-native natural-gas distribution primitives open to any AT Protocol client.",
+      "stakeholders": ["DSO operators", "service-point owners (DIDs)", "safety regulators", "field crews"],
+      "environment": "Cloudflare Workers + D1",
+      "standards": ["AT Protocol XRPC", "DoDAF v2.02", "BPMN 2.0", "DMN 1.3", "Camunda Forms", "DOT 49 CFR 192-aligned leak grading"]
+    },
+    "toolsAndMethods": [
+      "XRPC Lexicons for external contracts (com.etzhayyim.apps.openGas.*)",
+      "BPMN 2.0 for process definition (definePipeSegment, reportLeak)",
+      "DMN 1.3 for decision rules (leakClass)",
+      "Camunda Forms for human-task UI"
+    ],
+    "findings": "Topology = directed regulator → service-point edges with MAOP enforcement. Class-1 leaks emit immediate emergency notice; pressure-over-MAOP triggers regulator audit.",
+    "recommendations": "Add SCADA realtime ingest, cathodic-protection module, and odorant-level (mercaptan) audit per safety regulation."
+  },
+  "refs": {
+    "viewIds": ["open-gas.OV-1", "open-gas.OV-5b", "open-gas.OV-6a", "open-gas.CV-2", "open-gas.SV-1"]
+  },
+  "version": 1
+}

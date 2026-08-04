@@ -1,0 +1,47 @@
+{
+  "viewId": "open-gas.OV-6a",
+  "viewType": "OV-6a",
+  "title": "Operational Rules Model",
+  "did": "did:web:open-gas.etzhayyim.com",
+  "format": "json",
+  "content": {
+    "businessRules": [
+      {
+        "id": "rule.segmentOriginRegulator",
+        "statement": "Every pipe segment MUST originate at a regulator node.",
+        "kind": "constraint",
+        "enforcedBy": "worker/src/app.ts:definePipeSegment() validation"
+      },
+      {
+        "id": "rule.maopBound",
+        "statement": "Segment MAOP MUST be ≤ regulator outlet design pressure. Pressure log entries with kpa > MAOP trigger immediate audit.",
+        "kind": "invariant",
+        "enforcedBy": "worker/src/app.ts:definePipeSegment(), recordPressureLog()"
+      },
+      {
+        "id": "rule.readingMonotonic",
+        "statement": "Per service point, m³ readings MUST be non-decreasing in time.",
+        "kind": "invariant",
+        "enforcedBy": "worker/src/app.ts:recordReading() validation"
+      },
+      {
+        "id": "rule.leakClass",
+        "statement": "leakClass derived: indoorOrConfined OR requiresEvacuation OR hazardToPersons → 1 (immediate); hazardToProperty → 2 (P30d); else 3 (P15m). class 1 triggers emergency notice.",
+        "kind": "decisionTable",
+        "dmnDecisionKey": "openGas.leakClass",
+        "source": "dmn/leak-class.dmn"
+      },
+      {
+        "id": "rule.appendOnlyLeak",
+        "statement": "Leak records are append-only. Repair completion updates restored_at via reportLeak with prior leakDid as supersedes.",
+        "kind": "invariant",
+        "enforcedBy": "no UPDATE on leaks.detected_at/cause"
+      }
+    ]
+  },
+  "refs": {
+    "dmnDecisionKeys": ["openGas.leakClass"],
+    "viewIds": ["open-gas.OV-5b"]
+  },
+  "version": 1
+}

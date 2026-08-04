@@ -1,0 +1,44 @@
+{
+  "viewId": "open-gas.OV-5b",
+  "viewType": "OV-5b",
+  "title": "Operational Activity Model",
+  "did": "did:web:open-gas.etzhayyim.com",
+  "format": "json",
+  "content": {
+    "activities": [
+      { "id": "act.defineRegulator", "name": "Define Regulator", "type": "xrpc",
+        "realisedBy": [{ "xrpc": "com.etzhayyim.apps.openGas.defineRegulator" }] },
+      { "id": "act.definePipeSegment", "name": "Define Pipe Segment", "type": "bpmn",
+        "bpmnProcessKey": "definePipeSegment", "source": "bpmn/define-segment.bpmn",
+        "realisedBy": [
+          { "xrpc": "com.etzhayyim.apps.openGas.definePipeSegment" },
+          { "form": "openGas.definePipeSegment.v1" }
+        ] },
+      { "id": "act.recordReading", "name": "Record Meter Reading", "type": "xrpc",
+        "realisedBy": [{ "xrpc": "com.etzhayyim.apps.openGas.recordReading" }] },
+      { "id": "act.reportLeak", "name": "Report Leak", "type": "bpmn",
+        "bpmnProcessKey": "reportGasLeak", "source": "bpmn/report-leak.bpmn",
+        "realisedBy": [
+          { "xrpc": "com.etzhayyim.apps.openGas.reportLeak" },
+          { "form": "openGas.reportLeak.v1" },
+          { "dmn":  "openGas.leakClass" }
+        ] },
+      { "id": "act.recordPressureLog", "name": "Record Pressure Log", "type": "xrpc",
+        "realisedBy": [{ "xrpc": "com.etzhayyim.apps.openGas.recordPressureLog" }] },
+      { "id": "act.queryNetwork", "name": "Query Nodes / Segments / Leaks / Pressure", "type": "xrpc",
+        "realisedBy": [
+          { "xrpc": "com.etzhayyim.apps.openGas.getNode" },
+          { "xrpc": "com.etzhayyim.apps.openGas.listSegments" },
+          { "xrpc": "com.etzhayyim.apps.openGas.listLeaks" },
+          { "xrpc": "com.etzhayyim.apps.openGas.listPressureLogs" }
+        ] }
+    ]
+  },
+  "refs": {
+    "bpmnProcessKeys": ["definePipeSegment", "reportGasLeak"],
+    "dmnDecisionKeys": ["openGas.leakClass"],
+    "formKeys": ["openGas.definePipeSegment.v1", "openGas.reportLeak.v1"],
+    "viewIds": ["open-gas.OV-6a", "open-gas.SV-1"]
+  },
+  "version": 1
+}

@@ -1,0 +1,27 @@
+{
+  "viewId": "open-gas.OV-1",
+  "viewType": "OV-1",
+  "title": "High-Level Operational Concept Graphic",
+  "did": "did:web:open-gas.etzhayyim.com",
+  "format": "json",
+  "content": {
+    "operationalNodes": [
+      { "id": "client",     "label": "Client (planner / utility console / agent)" },
+      { "id": "gas",        "label": "open-gas.etzhayyim.com (Worker)" },
+      { "id": "store",      "label": "D1 (nodes/segments/readings/leaks/pressure SSoT)" },
+      { "id": "pds",        "label": "atproto.etzhayyim.com (PDS, public audit)" },
+      { "id": "regulator",  "label": "Gas Safety Regulator (DID)" },
+      { "id": "meter",      "label": "Service-point Meter (DID)" }
+    ],
+    "operationalFlows": [
+      { "from": "client",    "to": "gas",       "label": "XRPC (defineRegulator / definePipeSegment / reportLeak / recordPressureLog)" },
+      { "from": "meter",     "to": "gas",       "label": "XRPC (recordReading)" },
+      { "from": "gas",       "to": "store",     "label": "INSERT nodes / segments / readings / leaks / logs" },
+      { "from": "gas",       "to": "pds",       "label": "app.bsky.feed.post (class 1 OR pressure > MAOP)" },
+      { "from": "pds",       "to": "regulator", "label": "follow firehose" }
+    ],
+    "narrative": "Planners declare regulators and pipe segments with MAOP. Meters submit readings. Field crews report leaks; the leakClass DMN routes class-1 events to immediate emergency notice. Pressure-over-MAOP triggers an automatic regulator audit."
+  },
+  "refs": { "viewIds": ["open-gas.SV-1", "open-gas.OV-5b"] },
+  "version": 1
+}
