@@ -1,7 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "etzhayyim-open-gas",
-  "main": "svelte/.svelte-kit/cloudflare/_worker.js",
   "compatibility_date": "2026-04-20",
   "compatibility_flags": [
     "nodejs_compat"
@@ -17,14 +16,14 @@
   "vars": {
     "APP_HANDLE": "open-gas.etzhayyim.com",
     "PRIMARY_DID": "did:web:open-gas.etzhayyim.com",
-    "APP_FRAMEWORK": "sveltekit-edge-bff",
+    "APP_FRAMEWORK": "cljs-reagent-re-frame-jp-go-dds",
     "AGENTGATEWAY_MCP_ROUTER_URL": "https://mcp.etzhayyim.com/xrpc/com.etzhayyim.mcp.message"
   },
   "observability": {
     "enabled": true
   },
   "assets": {
-    "directory": "./svelte/.svelte-kit/cloudflare/client",
+    "directory": "./cljs/public",
     "binding": "ASSETS",
     "html_handling": "auto-trailing-slash",
     "not_found_handling": "none"
