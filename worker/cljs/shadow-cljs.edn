@@ -1,0 +1,5 @@
+{:deps   {:aliases [:cljs]}
+ :builds {:app {:target :browser
+                :output-dir "public/js"
+                :asset-path "js"
+                :modules {:app {:init-fn cloud-itonami.isic-3520.app/main}}}}}
