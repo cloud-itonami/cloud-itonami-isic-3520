@@ -26,7 +26,7 @@
 
   Deterministic: fixed thread ids, no clock, no randomness -- re-running
   produces a byte-identical file."
-  (:require [clojure.string :as str]
+  (:require [kotoba.lang.text :as str]
             [langgraph.graph :as g]
             [gas.facts :as facts]
             [gas.governor :as governor]
