@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "watch": "shadow-cljs watch app",
-    "build": "shadow-cljs compile app"
+    "watch": "amu compile --target wasm32-browser app",
+    "build": "amu compile --target wasm32-browser app"
   },
   "dependencies": {
     "react": "^18.2.0",

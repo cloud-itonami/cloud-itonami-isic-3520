@@ -397,7 +397,7 @@
      "</main>\n<footer>"
      (count commits) " committed, " (count holds) " HARD-held, "
      (count trace) " graph runs. Deterministic build-time artifact — "
-     "regenerate with <code>clojure -M:dev:render-html</code>."
+     "regenerate with <code>kbb -M:dev:render-html</code>."
      "</footer>\n</body></html>\n")))
 
 (defn -main [& args]
