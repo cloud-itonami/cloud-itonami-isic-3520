@@ -1,5 +1,5 @@
 (ns gas.phase-test
-  (:require [clojure.test :refer [deftest is]]
+  (:require [kotoba.test :refer [deftest is]]
             [gas.phase :as phase]))
 
 (deftest ^{:doc "CRITICAL: Neither :actuation/provision-supply nor :actuation/suspend-supply
