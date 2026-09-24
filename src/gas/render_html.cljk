@@ -26,7 +26,7 @@
 
   Deterministic: fixed thread ids, no clock, no randomness -- re-running
   produces a byte-identical file."
-  (:require [kotoba.lang.text :as str]
+  (:require [kotoba.io :as kio] [kotoba.lang.text :as str]
             [langgraph.graph :as g]
             [gas.facts :as facts]
             [gas.governor :as governor]
@@ -405,8 +405,8 @@
         result (run-demo!)
         ledger (store/ledger (:store result))
         holds (filter #(= :governor-hold (:t %)) ledger)
-        f (java.io.File. ^String out)]
-    (when-let [parent (.getParentFile f)] (.mkdirs parent))
+        f (kio/file ^String out)]
+    (when-let [parent (kio/parent-file f)] (kio/mkdirs parent))
     (spit f (render result))
     (println "wrote" out
              (str "(" (count ledger) " ledger facts, "
