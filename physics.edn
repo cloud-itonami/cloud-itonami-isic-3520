@@ -1,0 +1,47 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:dev:physics` runs it.
+;;
+;; README: a community gas-supply actor covering customer intake and meter
+;; verification, supply provisioning and supply suspension/disconnection,
+;; dispatching gated robot actions (the README itself models no fluid
+;; mechanics). The physical work a meter/valve robot does for it: exchanging
+;; a customer's gas meter, the low-pressure service line the meter sits on,
+;; and moving crates of verified meters out of the meter shop.
+;;
+;; The service-line case treats natural gas as incompressible, which holds
+;; only for the small pressure drops of a low-pressure service line.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isic-3520"
+ :cases
+ [{:id :exchange-gas-meter
+   :kind :manipulator
+   :procedure "meter robot lifts the verified replacement gas meter from its carrier and offers it up to the meter bar's union nuts"
+   :params {:l1-m 0.50 :l2-m 0.45 :m1-kg 6.0 :m2-kg 4.0
+            :from [0.55 -0.10] :to [0.40 0.45] :duration-s 2.5 :steps 400}
+   :sweep {:param :payload-kg :values [2.0 4.0 6.0 9.0 13.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 90.0 :basis "estimate: continuous shoulder torque of a ~10 kg-payload collaborative arm class"}
+   :boundary {:lo 0.5 :hi 40.0}}
+  {:id :low-pressure-service-line
+   :kind :pipe-flow
+   :procedure "natural gas flows from the street main through a 20 m DN25 steel service line to the customer's meter at the customer's peak demand"
+   :params {:diameter-m 0.0266 :length-m 20.0 :roughness-m 4.5e-5
+            :density-kg-m3 0.80 :viscosity-pa-s 1.1e-5 :pump-efficiency 1.0 :elevation-m 0.0}
+   :sweep {:param :q-m3s :values [0.0003 0.0006 0.0010 0.0015 0.0025]}
+   :quantity :pressure-drop-pa
+   :limit {:max 100.0 :basis "estimate: a ~1 mbar share of the low-pressure supply's allowable drop between main and meter"}
+   :boundary {:lo 0.0001 :hi 0.005}}
+  {:id :meter-crate-out-of-shop
+   :kind :transport
+   :procedure "AMR carries a crate of verified meters from the meter-test shop to the field-crew loading bay (70 m)"
+   :params {:mass-kg 150.0 :distance-m 70.0 :v-max-mps 1.2 :a-max-mps2 0.5
+            :brake-decel-mps2 0.8 :drive-force-n 350.0 :crr 0.015
+            :cog-height-m 0.30 :support-half-length-m 0.40 :payload-cog-height-m 0.80
+            :max-time-s 1800.0}
+   :sweep {:param :payload-kg :values [50.0 100.0 200.0 350.0 500.0]}
+   :quantity :cycle-time-s
+   :limit {:max 75.0 :basis "estimate: crews load out on a 75-second cadence at the start of shift"}
+   :boundary {:lo 10.0 :hi 2500.0}}]}
