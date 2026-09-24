@@ -28,7 +28,7 @@
   jurisdictional basis, approved by whom' is always a query over an
   immutable log -- the audit trail a community trusting a gas operator
   needs."
-  (:require #?(:clj  [clojure.edn :as edn]
+  (:require #?(:clj  [kotoba.lang.edn :as edn]
                :cljs [cljs.reader :as edn])
             [gas.registry :as registry]
             [langchain.db :as d]))
