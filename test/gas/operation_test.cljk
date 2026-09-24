@@ -1,5 +1,5 @@
 (ns gas.operation-test
-  (:require [clojure.test :refer [deftest testing is]]
+  (:require [kotoba.test :refer [deftest testing is]]
             [langgraph.graph :as g]
             [gas.operation :as operation]
             [gas.store :as store]))

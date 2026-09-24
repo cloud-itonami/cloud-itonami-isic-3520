@@ -1,5 +1,5 @@
 (ns gas.facts-test
-  (:require [clojure.test :refer [deftest is testing]]
+  (:require [kotoba.test :refer [deftest is testing]]
             [gas.facts :as facts]))
 
 (deftest ^{:doc "Japan (JPN) has official gas-safety requirements cited."} japan-jurisdiction-requirements

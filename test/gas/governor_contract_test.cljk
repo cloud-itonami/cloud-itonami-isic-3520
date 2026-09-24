@@ -1,5 +1,5 @@
 (ns gas.governor-contract-test
-  (:require [clojure.test :refer [deftest is]]
+  (:require [kotoba.test :refer [deftest is]]
             [gas.store :as store]
             [gas.advisor :as advisor]
             [gas.governor :as governor]

@@ -1,5 +1,5 @@
 (ns gas.store-contract-test
-  (:require [clojure.test :refer [deftest is]]
+  (:require [kotoba.test :refer [deftest is]]
             [gas.store :as store]))
 
 (deftest ^{:doc "Store should retrieve customers correctly."} mem-store-retrieval
